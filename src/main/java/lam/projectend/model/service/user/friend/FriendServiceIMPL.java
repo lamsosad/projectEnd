@@ -13,7 +13,7 @@ import java.util.Optional;
 public class FriendServiceIMPL implements IFriendService {
     @Override
     public List<Friend> findFriendByAlertAndUsersId(boolean alert, Long idUser) {
-        return friendRepository.findFriendByAlertAndUsersId(alert,idUser);
+        return friendRepository.findFriendByAlertAndUsersId(alert, idUser);
     }
 
     private final IFriendRepository friendRepository;
@@ -51,7 +51,7 @@ public class FriendServiceIMPL implements IFriendService {
 
     @Override
     public void deleteByUsersIdAndFriendId(Long idUser, Long idFriend) {
-        friendRepository.deleteByUsersIdAndFriendId(idUser,idFriend);
+        friendRepository.deleteByUsersIdAndFriendId(idUser, idFriend);
     }
 
     @Override

@@ -25,14 +25,16 @@ public class FriendController {
 
     @GetMapping("{id}")
     public List<Friend> findAll(@PathVariable Long id) {
-        List<Friend> friends = friendService.findFriendByStatusAndUsersId(true,id);
+        List<Friend> friends = friendService.findFriendByStatusAndUsersId(true, id);
         return friends;
     }
+
     @GetMapping("friendSent/{id}")
     public List<Friend> findFriendSent(@PathVariable Long id) {
-        List<Friend> friendSent = friendService.findFriendByAlertAndUsersId(true,id);
+        List<Friend> friendSent = friendService.findFriendByAlertAndUsersId(true, id);
         return friendSent;
     }
+
     @GetMapping("/friendPage/{id}")
     public List<Page> friendPage(@PathVariable Long id) {
         return pageService.findByUsersIdAndStatusAndRegimeOrderByDatePostDesc(id, true, true);
@@ -51,6 +53,14 @@ public class FriendController {
                     .alert(true)
                     .friend(userService.findById(sendAddFriend.getIdFriend()).get())
                     .users(userService.findById(sendAddFriend.getIdUser()).get())
+                    .dateAdd(dateNow)
+                    .status(false)
+                    .build());
+            Friend friend1 = friendService.save(Friend
+                    .builder()
+                    .alert(true)
+                    .friend(userService.findById(sendAddFriend.getIdUser()).get())
+                    .users(userService.findById(sendAddFriend.getIdFriend()).get())
                     .dateAdd(dateNow)
                     .status(false)
                     .build());
@@ -75,6 +85,7 @@ public class FriendController {
     @PutMapping("/acceptFriend")
     public ResponseEntity<ResponseMessage> acceptFriend(@RequestBody SendAddFriend sendAddFriend) {
         Friend friend = friendService.findFriendByUsersIdAndFriendId(sendAddFriend.getIdUser(), sendAddFriend.getIdFriend());
+        Friend friend1 = friendService.findFriendByUsersIdAndFriendId(sendAddFriend.getIdFriend(), sendAddFriend.getIdUser());
         if (friend == null) {
             return ResponseEntity.ok().body(
                     ResponseMessage.builder()
@@ -86,6 +97,8 @@ public class FriendController {
         }
         friend.setStatus(true);
         friend.setAlert(false);
+        friend1.setStatus(true);
+        friend1.setAlert(false);
         friendService.save(friend);
         return ResponseEntity.ok().body(
                 ResponseMessage.builder()
@@ -98,13 +111,13 @@ public class FriendController {
 
     @DeleteMapping("/deleteFriend/{id}")
     public ResponseEntity<ResponseMessage> deleteFriend(@PathVariable Long id) {
-            friendService.remove(id);
-            return ResponseEntity.ok().body(
-                    ResponseMessage.builder()
-                            .status("OK")
-                            .message("Đã hủy kết bạn!")
-                            .data("")
-                            .build()
-            );
+        friendService.remove(id);
+        return ResponseEntity.ok().body(
+                ResponseMessage.builder()
+                        .status("OK")
+                        .message("Đã hủy kết bạn!")
+                        .data("")
+                        .build()
+        );
     }
 }

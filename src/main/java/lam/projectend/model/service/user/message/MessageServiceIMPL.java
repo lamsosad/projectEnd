@@ -3,6 +3,8 @@ package lam.projectend.model.service.user.message;
 import lam.projectend.model.entity.message.Message;
 import lam.projectend.model.repository.IMessageRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +36,7 @@ public class MessageServiceIMPL implements IMessageService {
     }
 
     @Override
-    public List<Message> findMessageByUsersSentIdAndUsersReceivedIdOrderByDateSendDesc(Long idUsersSent, Long idUsersReceivedId) {
-        return messageRepository.findMessageByUsersSentIdAndUsersReceivedIdOrderByDateSendDesc(idUsersSent,idUsersReceivedId);
+    public Page<Message> findMessageByUsersSentIdAndUsersReceivedIdOrderByDateSendDesc(Long idUsersSent, Long idUsersReceivedId, Pageable pageable) {
+        return messageRepository.findMessageQuery(idUsersSent,idUsersReceivedId,pageable);
     }
 }

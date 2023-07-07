@@ -6,14 +6,14 @@ import lam.projectend.model.entity.message.Message;
 import lam.projectend.model.service.user.message.IMessageService;
 import lam.projectend.model.service.user.user.IUserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/message")
@@ -23,11 +23,10 @@ public class MessageController {
     private final IMessageService messageService;
     private final IUserService userService;
 
-    @GetMapping
-    public List<Message> show(@RequestBody MessageDTO messageDTO) {
-        List<Message> messages = messageService.findMessageByUsersSentIdAndUsersReceivedIdOrderByDateSendDesc(messageDTO.getIdSent(), messageDTO.getIdReceiver());
-        List<Message> messages1 = messageService.findMessageByUsersSentIdAndUsersReceivedIdOrderByDateSendDesc(messageDTO.getIdReceiver(), messageDTO.getIdSent());
-        messages.addAll(messages1);
+    @GetMapping("/{ID1}/{ID2}")
+    public Page<?> show(@PathVariable Long ID1, @PathVariable Long ID2, Pageable pageable1) {
+        Pageable pageable = PageRequest.of(pageable1.getPageNumber(), 8);
+        Page<Message> messages = messageService.findMessageByUsersSentIdAndUsersReceivedIdOrderByDateSendDesc(ID1, ID2, pageable);
         return messages;
     }
 

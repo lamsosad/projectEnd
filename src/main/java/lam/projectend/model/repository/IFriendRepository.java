@@ -19,6 +19,7 @@ public interface IFriendRepository extends JpaRepository<Friend, Long> {
 
     List<Friend> findFriendByStatusAndAlert(boolean status, boolean alert);
 
+
     boolean existsFriendByUsersIdAndFriendId(Long idUser, Long idFriend);
 
     @Modifying
